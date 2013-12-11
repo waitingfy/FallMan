@@ -183,13 +183,10 @@ void Bob::update(float dt){
 	
 	checkState();
 
-
-
 	setVector(ccp(getVector().x * 0.90,getVector().y ));
 
 	setNextPosition(ccp(getPositionX() + getVector().x * dt,
 		             getPositionY() + getVector().y * dt));
-
 
 	setPosition(getNextPosition());
 

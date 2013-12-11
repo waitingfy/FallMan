@@ -6,6 +6,9 @@
 #include "SimpleAudioEngine.h"
 #include "Bob.h"
 #include "Board.h"
+#include <vector>
+
+
 using namespace std;
 
 enum{
@@ -41,7 +44,7 @@ public:
 	void leftMove(CCObject* pSender);
 	void rightMove(CCObject* pSender);
 	int getFloorCount();
-	void generateSomeBoard(int startPosition,int count);
+	void generateSomeBoards(int startPosition,int count);
 	void update(float dt);
 	void pauseGame(CCObject *pSender);
 	void resumeGame(CCObject *pSender);
@@ -70,18 +73,15 @@ private:
 	int _levelIndex;
 	bool _isSomeBoardHitBob;             //true means some board hit bob
 
-	CCParallaxNode *_rootNode;
-	Board *normalBoard;
-	Board *starBoard;
-	Board *rollingBoard;
-	Board *rotateLeftBoard;
-	Board *springBoard;
 	bool _changeHighScore;
+	void initMenus();
+	vector<int> getLevelDueToFloorNum();
 	void changeSpeedWithFloorCount();
 	void displayFloorNum();
 	void displayBloodCount();
-	void updateBobAndBoard();
+	void updateBobAndBoard(float dt);
 	void checkGameOver();
+	void saveHighestScore();
 	void getNextBoardIndex(int &levelIndex,vector<int> &levelVector);
 };
 

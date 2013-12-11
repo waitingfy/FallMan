@@ -105,12 +105,3 @@ void Board::collisionWithBob(Bob *bob){
 	
 }
 
-bool Board::overLapRectangles(CCRect r1, CCRect r2){
-	if(r1.getMinX() < r2.getMinX() + r2.size.width &&
-		r1.getMidX() + r1.size.width > r2.getMidX() &&
-		r1.getMidY() < r2.getMidY() + r2.size.height &&
-		r1.getMidY() + r1.size.height > r2.getMidY())
-		return true;
-	else
-		return false;
-}

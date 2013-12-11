@@ -3,5 +3,10 @@
 
 const char HighScoreKey[] = "highscore";
 const char SoundEnableKey[] = "soundEnable";
+const int BoardCountEveryTimeGenerate = 20;
+const int SmallestCountBoard = 10;            //when we reach this count, we will generate some boards
+const int BoardWillDisppearHigherThisNumber = 440;
+const float GoTopSpeed = 0.9f;
+const int PerBoardHeight = 80;
 
 #endif

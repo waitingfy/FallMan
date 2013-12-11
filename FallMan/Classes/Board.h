@@ -27,7 +27,6 @@ public:
 	bool checkCollision(Bob *bob);
 	virtual bool init(void);
 	virtual void collisionWithBob(Bob *bob);
-	static bool overLapRectangles(CCRect r1, CCRect r2);
 };
 
 
