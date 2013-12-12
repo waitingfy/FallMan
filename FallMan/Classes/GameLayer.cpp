@@ -339,7 +339,7 @@ void GameLayer::updateBobAndBoard(float dt){
 		}
 
 	}
-	if(!_isSomeBoardHitBob && _bob->getState() != kBobDie){// if no board hit bob, bob's state set to kBobFall
+	if(!_isSomeBoardHitBob && _bob->getState() != kBobDie && _bob->getState() != kBobColliteWithNothing){// if no board hit bob, bob's state set to kBobFall
 		_bob->setState(kBobFall);
 	}
 	//check hit the top star

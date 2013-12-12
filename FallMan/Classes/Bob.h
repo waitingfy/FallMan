@@ -20,7 +20,7 @@ typedef enum{
 	kBobOnLeftRotateBoard,
 	kBobOnRollingBoard,
 	kBobOnSpringBoard,
-	kBobCollisionWithNothing
+	kBobColliteWithNothing
 } BobState;
 
 typedef enum{
@@ -34,7 +34,6 @@ public:
 	CC_SYNTHESIZE(CCPoint, _vector, Vector);
 	CC_SYNTHESIZE(bool,_isCanRunAction,IsCanRunAction);
 	CC_SYNTHESIZE(CCPoint, _nextPosition, NextPosition);
-	CC_SYNTHESIZE(bool,_collisionWithNoThing,CollisionWithNoThing); //if true bob will not collide with board
 	
 	//CC_SYNTHESIZE(BobDirection, _direction, Direction);
 
@@ -48,9 +47,7 @@ public:
 	void checkState();
 	static Bob* create(CCPoint position);
 	void resetVectorY();
-	void changeToFall(float dt);
 	void onNormalBoardAction();
-	void setBobCollisionWithNothing(float dt,float totalTime);
 	void update(float dt);
 
 	inline int getBloodCount()const{
@@ -65,7 +62,8 @@ private:
 	CCRepeatForever *_fallAction;
 	CCAction *_onRollingBoardAction;
 	CCSpriteFrame *_dieSpriteFrame;
-	void bobOnRollingBoardTimeOut();
+	void changeToFall();
+	void changeToCollideNothing();
 };
 
 

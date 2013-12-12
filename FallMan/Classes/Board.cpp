@@ -55,7 +55,7 @@ bool Board::init(){
 
 
 bool Board::checkCollision(Bob *bob){
-	if(bob->getCollisionWithNoThing() == true)
+	if(bob->getState() == kBobColliteWithNothing || bob->getState() == kBobDie)
 		return false;
 
 	if(bob->left() <= this->right() && bob->right() >= this->left()
@@ -74,7 +74,7 @@ void Board::collisionWithBob(Bob *bob){
 			bob->setState(kBobOnBoard);
 			break;
 		case kRollingBoard:
-			//bob->setPosition(ccp(bob->getPositionX(),bob->getHeight() / 2 + top()));
+			bob->setPosition(ccp(bob->getPositionX(),bob->getHeight() / 2 + top()));
 			bob->setState(kBobOnRollingBoard);
 			if(getIsCanRunAction()){
 				this->stopAllActions();

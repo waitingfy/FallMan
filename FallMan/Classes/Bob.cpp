@@ -8,14 +8,15 @@ Bob::Bob(CCPoint position):_state(kBobFall){
 	setPosition(position);
 	resetVectorY();
 	setIsCanRunAction(true);
-	setCollisionWithNoThing(false);//it will collide with boards
 	_width = 20;//change from 26,because bob's two feet size is smaller
 	_height = 30;
 	_bloodCount = 12;
 
 	_onRollingBoardAction = CCSequence::create(
 		CCDelayTime::create(0.5f),
-		CCCallFunc::create(this,callfunc_selector(Bob::bobOnRollingBoardTimeOut)),
+		CCCallFunc::create(this,callfunc_selector(Bob::changeToCollideNothing)),
+		CCDelayTime::create(0.8f),
+		CCCallFunc::create(this,callfunc_selector(Bob::changeToFall)),
 		NULL
 		);
 	_onRollingBoardAction->retain();
@@ -25,7 +26,6 @@ Bob::Bob(CCPoint position):_state(kBobFall){
 }
 
 Bob::~Bob(void){
-	//CC_SAFE_RELEASE(_fallAction);
 	CC_SAFE_RELEASE(_onRollingBoardAction);
 	CC_SAFE_RELEASE(_dieSpriteFrame);
 }
@@ -50,17 +50,16 @@ BobState Bob::getState()const{
 }
 
 void Bob::setState(BobState newState){
-	if(getState() != newState){
+	bool isANewState = getState() != newState;
+
+	if(isANewState){
 		setIsCanRunAction(true);
 	}
-	if(getState() != newState && newState == kBobOnStarBoard){
+	if(isANewState && (newState == kBobOnStarBoard || newState == kBobHitTop)){
 		setBloodCount(getBloodCount() - 5);
 	}
-	if(getState() != newState && newState == kBobHitTop){
-		setBloodCount(getBloodCount() - 5);
-	}
-	if(getState() != newState && (newState == kBobOnBoard || newState == kBobOnLeftRotateBoard) ||
-		newState == kBobOnRightRotateBoard || newState == kBobOnRollingBoard || newState == kBobOnSpringBoard){
+	if(isANewState && (newState == kBobOnBoard || newState == kBobOnLeftRotateBoard ||
+		newState == kBobOnRightRotateBoard || newState == kBobOnRollingBoard || newState == kBobOnSpringBoard)){
 		setBloodCount(getBloodCount() + 1);
 	}
 	_state = newState;
@@ -100,7 +99,6 @@ void Bob::checkState(){
 		break;
 	case kBobHitTop:
 		this->setVector(ccp(getVector().x, getVector().y - 1000));
-		//this->setCollisionWithNoThing(true);
 		break;
 	case kBobSuperMan:
 		break;
@@ -121,7 +119,6 @@ void Bob::checkState(){
 		}
 		break;
 	case kBobDie:
-		setCollisionWithNoThing(true);
 		this->setDisplayFrame(_dieSpriteFrame);
 		setVector(ccp(getVector().x,WORLD_Y_GRAVITY * 4));
 		break;
@@ -142,6 +139,9 @@ void Bob::checkState(){
 		break;
 	case kBobOnSpringBoard:
 		this->setVector(ccp(getVector().x,getVector().y + 1000));
+		break;
+	case kBobColliteWithNothing:
+		resetVectorY();
 		break;
 	}
 }
@@ -170,14 +170,6 @@ void Bob::onNormalBoardAction(){
 	}
 }
 
-void Bob::setBobCollisionWithNothing(float dt,float totalTime){
-	setCollisionWithNoThing(true);
-	float time = 0;
-	time += dt;
-	if(time >= totalTime){
-		setCollisionWithNoThing(false);
-	}
-}
 
 void Bob::update(float dt){
 	
@@ -192,13 +184,11 @@ void Bob::update(float dt){
 
 }
 
-void Bob::changeToFall(float dt){
+void Bob::changeToFall(){
 	setState(kBobFall);
 }
 
-void Bob::bobOnRollingBoardTimeOut(){
-	CCLOG("bobOnRollingBoardTimeOut");
-	setState(kBobCollisionWithNothing);
-	resetVectorY();
-	//setState(kBobFall);
+void Bob::changeToCollideNothing(){
+	CCLOG("changeToCollideNothing");
+	setState(kBobColliteWithNothing);
 }
