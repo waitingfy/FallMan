@@ -133,6 +133,7 @@ void Bob::checkState(){
 	case kBobOnRollingBoard:
 		this->setVector(ccp(getVector().x, 0));
 		if(getIsCanRunAction()){
+			this->stopAllActions();	
 			this->runAction(_onRollingBoardAction);
 			setIsCanRunAction(false);
 		}
