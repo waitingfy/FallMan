@@ -362,6 +362,7 @@ void GameLayer::checkGameOver(){
 
 void GameLayer::saveHighestScore(){
 	if(_changeHighScore == false){//save highest score
+		PlayEffect(DieEffect);
 		int highScore = CCUserDefault::sharedUserDefault()->getIntegerForKey(HighScoreKey);
 		if(getFloorCount() > highScore){
 			CCUserDefault::sharedUserDefault()->setIntegerForKey(HighScoreKey,getFloorCount());

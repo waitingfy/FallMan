@@ -1,10 +1,10 @@
 #include "cocos2d.h"
 #include "CCEGLView.h"
 #include "AppDelegate.h"
-//#include "GameLayer.h"
 #include "MenuLayer.h"
 #include "SimpleAudioEngine.h"
 #include "AnimationManager.h"
+#include "Constants.h"
 
 using namespace CocosDenshion;
 
@@ -34,6 +34,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 
 	sAnimationMgr->initAnimationMap();
 
+	preloadMusic();
     // create a scene. it's an autorelease object
     CCScene *pScene = MenuLayer::scene();
 
@@ -48,6 +49,7 @@ void AppDelegate::applicationDidEnterBackground()
     CCDirector::sharedDirector()->stopAnimation();
 
     SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+	SimpleAudioEngine::sharedEngine()->pauseAllEffects();
 }
 
 // this function will be called when the app is active again
@@ -56,4 +58,24 @@ void AppDelegate::applicationWillEnterForeground()
     CCDirector::sharedDirector()->startAnimation();
 
     SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+	SimpleAudioEngine::sharedEngine()->resumeAllEffects();
+}
+
+
+void AppDelegate::preloadMusic(){
+	SimpleAudioEngine::sharedEngine()->preloadBackgroundMusic(BackGroundMusic);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(BuffleEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(ClickEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(CoinEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(DieEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(HighjumpEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(HitEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(JumpEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(NailEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(HitEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(SkateEffect);
+	SimpleAudioEngine::sharedEngine()->preloadEffect(SpringEffect);
+
+	SimpleAudioEngine::sharedEngine()->setBackgroundMusicVolume(0.1f);
+	SimpleAudioEngine::sharedEngine()->setEffectsVolume(0.5f);
 }

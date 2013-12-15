@@ -1,5 +1,6 @@
 #include "Bob.h"
 #include "AnimationManager.h"
+#include "Constants.h"
 
 const int WORLD_Y_GRAVITY = -45;
 
@@ -56,10 +57,17 @@ void Bob::setState(BobState newState){
 		setIsCanRunAction(true);
 	}
 	if(isANewState && (newState == kBobOnStarBoard || newState == kBobHitTop)){
+		PlayEffect(NailEffect);
 		setBloodCount(getBloodCount() - 5);
 	}
 	if(isANewState && (newState == kBobOnBoard || newState == kBobOnLeftRotateBoard ||
-		newState == kBobOnRightRotateBoard || newState == kBobOnRollingBoard || newState == kBobOnSpringBoard)){
+		newState == kBobOnRightRotateBoard || newState == kBobOnRollingBoard)){
+		PlayEffect(BuffleEffect);
+		setBloodCount(getBloodCount() + 1);
+	}
+
+	if(isANewState && newState == kBobOnSpringBoard){
+		PlayEffect(SpringEffect);
 		setBloodCount(getBloodCount() + 1);
 	}
 	_state = newState;
@@ -109,6 +117,7 @@ void Bob::checkState(){
 	case kBobOnStarBoard:
 		this->setVector(ccp(getVector().x, 0));
 		if(getIsCanRunAction()){
+			
 			this->stopAllActions();	
 		   if(this->getVector().x < 0){
 			  this->runAction(sAnimationMgr->createAnimate(aOnStarBoardLeft));
@@ -153,6 +162,7 @@ void Bob::setBloodCount(int bloodCount){
 	}
 	if(bloodCount <= 0){
 		CCLOG("bob die!!!!!!!!");
+		PlayEffect(DieEffect);
 		setState(kBobDie);
 		bloodCount = 0;
 	}

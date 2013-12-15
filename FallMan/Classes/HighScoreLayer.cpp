@@ -70,6 +70,7 @@ bool HighScore::init()
 }
 
 void HighScore::backToMenuLayer(CCObject *pSender){
+	PlayEffect(ClickEffect);
 	CCScene *newScene = CCTransitionMoveInL::create(0.2f, MenuLayer::scene());
 	CCDirector::sharedDirector()->replaceScene(newScene);
 }

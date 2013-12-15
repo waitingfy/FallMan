@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "AnimationManager.h"
+#include "Constants.h"
 
 Board::Board(BoardType type){
 	_width = 68;
@@ -77,6 +78,7 @@ void Board::collisionWithBob(Bob *bob){
 			bob->setPosition(ccp(bob->getPositionX(),bob->getHeight() / 2 + top()));
 			bob->setState(kBobOnRollingBoard);
 			if(getIsCanRunAction()){
+				PlayEffect(SkateEffect);
 				this->stopAllActions();
 				this->runAction(sAnimationMgr->createAnimate(aRollingBoard));
 				setIsCanRunAction(false);

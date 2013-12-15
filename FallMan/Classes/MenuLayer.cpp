@@ -130,16 +130,19 @@ bool MenuLayer::init()
 
 
 		//set menus' visibility due to "save data"
-		bool soundEnable = CCUserDefault::sharedUserDefault()->getBoolForKey(SoundEnableKey,true);
-		if(soundEnable){
+		_soundEnable = CCUserDefault::sharedUserDefault()->getBoolForKey(SoundEnableKey,true);
+		
+		if(_soundEnable){
 			_soundOnMenu->setVisible(true);
 			_soundOffMenu->setVisible(false);
+			if(!SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()){
+				SimpleAudioEngine::sharedEngine()->playBackgroundMusic(BackGroundMusic,true);
+			}		
 		}else{
 			_soundOnMenu->setVisible(false);
 			_soundOffMenu->setVisible(true);
+			
 		}
-
-		SimpleAudioEngine::sharedEngine()->preloadBackgroundMusic("background.mp3");
 
 		bRet = true;
 	} while (0);
@@ -148,16 +151,19 @@ bool MenuLayer::init()
 }
 
 void MenuLayer::beginningGame(CCObject* pSender){
+	PlayEffect(ClickEffect);
 	CCScene *newScene = CCTransitionMoveInR::create(0.2f,GameLayer::scene());
 	CCDirector::sharedDirector()->replaceScene(newScene);
 }
 
 void MenuLayer::goToHighScore(CCObject* pSender){
+	PlayEffect(ClickEffect);
 	CCScene *newScene = CCTransitionMoveInR::create(0.2f,HighScore::scene());
 	CCDirector::sharedDirector()->replaceScene(newScene);
 }
 
 void MenuLayer::goToHelp(CCObject* pSender){
+	PlayEffect(ClickEffect);
 	CCScene *newScene = CCTransitionMoveInR::create(0.2f,TutorialFirst::scene());
 	CCDirector::sharedDirector()->replaceScene(newScene);
 }
@@ -175,11 +181,12 @@ void MenuLayer::soundOnMenuPress(CCObject* pSender){
 	CCUserDefault::sharedUserDefault()->setBoolForKey(SoundEnableKey,false);
 	_soundOnMenu->setVisible(false);
 	_soundOffMenu->setVisible(true);
+	SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
 }
 
 void MenuLayer::soundOffMenuPress(CCObject* pSender){
 	CCUserDefault::sharedUserDefault()->setBoolForKey(SoundEnableKey,true);
 	_soundOnMenu->setVisible(true);
 	_soundOffMenu->setVisible(false);
-	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background.mp3");
+	SimpleAudioEngine::sharedEngine()->playBackgroundMusic(BackGroundMusic,true);
 }
