@@ -38,23 +38,42 @@ NS_CC_BEGIN
 /**
  * @addtogroup data_structures
  * @{
+ * @ js NA
  */
 
 class CC_DLL CCString : public CCObject
 {
 public:
+    /**
+     * @lua NA
+     */
     CCString();
+    /**
+     * @lua NA
+     */
     CCString(const char* str);
+    /**
+     * @lua NA
+     */
     CCString(const std::string& str);
+    /**
+     * @lua NA
+     */
     CCString(const CCString& str);
-
+    /**
+     * @lua NA
+     */
     virtual ~CCString();
     
-    /* override assignment operator */
+    /* override assignment operator
+     * @lua NA
+     */
     CCString& operator= (const CCString& other);
 
-    /** init a string with format, it's similar with the c function 'sprintf' */ 
-    bool initWithFormat(const char* format, ...);
+    /** init a string with format, it's similar with the c function 'sprintf' 
+     * @lua NA
+     */
+    bool initWithFormat(const char* format, ...) CC_FORMAT_PRINTF(2, 3);
 
     /** convert to int value */
     int intValue() const;
@@ -80,7 +99,10 @@ public:
     /** compare to a c string */
     int compare(const char *) const;
 
-    /* override functions */
+    /* override functions 
+     * @lua NA
+     * @js  NA
+     */
     virtual CCObject* copyWithZone(CCZone* pZone);
     virtual bool isEqual(const CCObject* pObject);
 
@@ -94,8 +116,9 @@ public:
      *  if you want to change it, you should modify the kMaxStringLen macro in CCString.cpp file.
      *  @return A CCString pointer which is an autorelease object pointer,
      *          it means that you needn't do a release operation unless you retain it.
+     *  @lua NA
      */ 
-    static CCString* createWithFormat(const char* format, ...);
+    static CCString* createWithFormat(const char* format, ...) CC_FORMAT_PRINTF(1, 2);
 
     /** create a string with binary data 
      *  @return A CCString pointer which is an autorelease object pointer,
@@ -108,6 +131,10 @@ public:
      *          it means that you needn't do a release operation unless you retain it.
      */
     static CCString* createWithContentsOfFile(const char* pszFileName);
+    /**
+     * @lua NA
+     */
+    virtual void acceptVisitor(CCDataVisitor &visitor);
 
 private:
 

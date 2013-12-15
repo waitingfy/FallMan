@@ -25,13 +25,14 @@
 #include "CCScriptSupport.h"
 #include "CCScheduler.h"
 
-void CC_DLL cc_assert_script_compatible(bool cond, const char *msg)
+bool CC_DLL cc_assert_script_compatible(const char *msg)
 {
     cocos2d::CCScriptEngineProtocol* pEngine = cocos2d::CCScriptEngineManager::sharedManager()->getScriptEngine();
-    if (!cond && pEngine && pEngine->executeAssert(cond, msg))
+    if (pEngine && pEngine->handleAssert(msg))
     {
-        return;
+        return true;
     }
+    return false;
 }
 
 NS_CC_BEGIN
@@ -48,7 +49,11 @@ CCScriptHandlerEntry* CCScriptHandlerEntry::create(int nHandler)
 
 CCScriptHandlerEntry::~CCScriptHandlerEntry(void)
 {
-    CCScriptEngineManager::sharedManager()->getScriptEngine()->removeScriptHandler(m_nHandler);
+	if (m_nHandler != 0)
+	{
+        CCScriptEngineManager::sharedManager()->getScriptEngine()->removeScriptHandler(m_nHandler);
+        m_nHandler = 0;
+    }
 }
 
 // #pragma mark -
@@ -96,8 +101,12 @@ CCTouchScriptHandlerEntry* CCTouchScriptHandlerEntry::create(int nHandler,
 
 CCTouchScriptHandlerEntry::~CCTouchScriptHandlerEntry(void)
 {
-    CCScriptEngineManager::sharedManager()->getScriptEngine()->removeScriptHandler(m_nHandler);
-    LUALOG("[LUA] Remove touch event handler: %d", m_nHandler);
+    if (m_nHandler != 0)
+    {
+        CCScriptEngineManager::sharedManager()->getScriptEngine()->removeScriptHandler(m_nHandler);
+        LUALOG("[LUA] Remove touch event handler: %d", m_nHandler);
+        m_nHandler = 0;
+    }
 }
 
 bool CCTouchScriptHandlerEntry::init(bool bIsMultiTouches, int nPriority, bool bSwallowsTouches)

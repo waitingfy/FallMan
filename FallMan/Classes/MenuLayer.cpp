@@ -3,8 +3,11 @@
 #include "HighScoreLayer.h"
 #include "TutorialFirstLayer.h"
 #include "Constants.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+
+using namespace CocosDenshion;
 
 CCScene* MenuLayer::scene(){
 	CCScene * scene = NULL;
@@ -136,6 +139,8 @@ bool MenuLayer::init()
 			_soundOffMenu->setVisible(true);
 		}
 
+		SimpleAudioEngine::sharedEngine()->preloadBackgroundMusic("background.mp3");
+
 		bRet = true;
 	} while (0);
 
@@ -176,4 +181,5 @@ void MenuLayer::soundOffMenuPress(CCObject* pSender){
 	CCUserDefault::sharedUserDefault()->setBoolForKey(SoundEnableKey,true);
 	_soundOnMenu->setVisible(true);
 	_soundOffMenu->setVisible(false);
+	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background.mp3");
 }

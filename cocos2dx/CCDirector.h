@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include "cocoa/CCArray.h"
 #include "CCGL.h"
 #include "kazmath/mat4.h"
-#include "label_nodes/CCLabelTTF.h"
+#include "label_nodes/CCLabelAtlas.h"
 #include "ccTypeInfo.h"
 
 
@@ -97,9 +97,20 @@ and when to execute the Scenes.
 class CC_DLL CCDirector : public CCObject, public TypeInfo
 {
 public:
+    /**
+     *  @js ctor
+     */
     CCDirector(void);
+    /**
+     *  @js NA
+     *  @lua NA
+     */
     virtual ~CCDirector(void);
     virtual bool init(void);
+    /**
+     * @js NA
+     * @lua NA
+     */
     virtual long getClassTypeInfo() {
 		static const long id = cocos2d::getHashCodeByString(typeid(cocos2d::CCDirector).name());
 		return id;
@@ -123,7 +134,9 @@ public:
     /** seconds per frame */
     inline float getSecondsPerFrame() { return m_fSecondsPerFrame; }
 
-    /** Get the CCEGLView, where everything is rendered */
+    /** Get the CCEGLView, where everything is rendered
+     * @js NA
+     */
     inline CCEGLView* getOpenGLView(void) { return m_pobOpenGLView; }
     void setOpenGLView(CCEGLView *pobOpenGLView);
 
@@ -138,9 +151,12 @@ public:
     
     /** Sets an OpenGL projection
      @since v0.8.2
+     @js NA
      */
     inline ccDirectorProjection getProjection(void) { return m_eProjection; }
     void setProjection(ccDirectorProjection kProjection);
+     /** reshape projection matrix when canvas has been change"*/
+    void reshapeProjection(const CCSize& newWindowSize);
     
     /** Sets the glViewport*/
     void setViewport();
@@ -204,7 +220,7 @@ public:
 
     // Scene Management
 
-    /**Enters the Director's main loop with the given Scene. 
+    /** Enters the Director's main loop with the given Scene.
      * Call it to run only your FIRST scene.
      * Don't call it if there is already a running scene.
      *
@@ -212,26 +228,32 @@ public:
      */
     void runWithScene(CCScene *pScene);
 
-    /**Suspends the execution of the running scene, pushing it on the stack of suspended scenes.
+    /** Suspends the execution of the running scene, pushing it on the stack of suspended scenes.
      * The new scene will be executed.
      * Try to avoid big stacks of pushed scenes to reduce memory allocation. 
      * ONLY call it if there is a running scene.
      */
     void pushScene(CCScene *pScene);
 
-    /**Pops out a scene from the queue.
+    /** Pops out a scene from the queue.
      * This scene will replace the running one.
      * The running scene will be deleted. If there are no more scenes in the stack the execution is terminated.
      * ONLY call it if there is a running scene.
      */
     void popScene(void);
 
-    /**Pops out all scenes from the queue until the root scene in the queue.
+    /** Pops out all scenes from the queue until the root scene in the queue.
      * This scene will replace the running one.
-     * The running scene will be deleted. If there are no more scenes in the stack the execution is terminated.
-     * ONLY call it if there is a running scene.
+     * Internally it will call `popToSceneStackLevel(1)`
      */
     void popToRootScene(void);
+
+    /** Pops out all scenes from the queue until it reaches `level`.
+     If level is 0, it will end the director.
+     If level is 1, it will pop all scenes until it reaches to root scene.
+     If level is <= than the current stack level, it won't do anything.
+     */
+ 	void popToSceneStackLevel(int level);
 
     /** Replaces the running scene with a new one. The running scene is terminated.
      * ONLY call it if there is a running scene.
@@ -279,6 +301,9 @@ public:
      */
     void purgeCachedData(void);
 
+	/** sets the default values based on the CCConfiguration info */
+    void setDefaultValues(void);
+
     // OpenGL Helper
 
     /** sets the OpenGL default values */
@@ -323,13 +348,18 @@ public:
 
     /** CCAccelerometer associated with this director
      @since v2.0
+     @js NA
+     @lua NA
      */
     CC_PROPERTY(CCAccelerometer*, m_pAccelerometer, Accelerometer);
 
     /* delta time since last tick to main loop */
 	CC_PROPERTY_READONLY(float, m_fDeltaTime, DeltaTime);
 	
-    /** returns a shared instance of the director */
+public:
+    /** returns a shared instance of the director 
+     *  @js getInstance
+     */
     static CCDirector* sharedDirector(void);
 
 protected:
@@ -360,9 +390,9 @@ protected:
     float m_fAccumDt;
     float m_fFrameRate;
     
-    CCLabelTTF *m_pFPSLabel;
-    CCLabelTTF *m_pSPFLabel;
-    CCLabelTTF *m_pDrawsLabel;
+    CCLabelAtlas *m_pFPSLabel;
+    CCLabelAtlas *m_pSPFLabel;
+    CCLabelAtlas *m_pDrawsLabel;
     
     /** Whether or not the Director is paused */
     bool m_bPaused;
@@ -421,6 +451,8 @@ protected:
   - Only supports animation intervals of 1/60 1/30 & 1/15
  
  @since v0.8.2
+ @js NA
+ @lua NA
  */
 class CCDisplayLinkDirector : public CCDirector
 {

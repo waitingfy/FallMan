@@ -25,7 +25,11 @@ THE SOFTWARE.
 #ifndef __CCOBJECT_H__
 #define __CCOBJECT_H__
 
-#include "platform/CCPlatformMacros.h"
+#include "CCDataVisitor.h"
+
+#ifdef EMSCRIPTEN
+#include <GLES2/gl2.h>
+#endif // EMSCRIPTEN
 
 NS_CC_BEGIN
 
@@ -39,12 +43,19 @@ class CCObject;
 class CCNode;
 class CCEvent;
 
+/**
+ * @js NA
+ * @lua NA
+ */
 class CC_DLL CCCopying
 {
 public:
     virtual CCObject* copyWithZone(CCZone* pZone);
 };
 
+/**
+ * @js NA
+ */
 class CC_DLL CCObject : public CCCopying
 {
 public:
@@ -59,15 +70,20 @@ protected:
     unsigned int        m_uAutoReleaseCount;
 public:
     CCObject(void);
+    /**
+     *  @lua NA
+     */
     virtual ~CCObject(void);
     
     void release(void);
     void retain(void);
     CCObject* autorelease(void);
     CCObject* copy(void);
-    bool isSingleReference(void);
-    unsigned int retainCount(void);
+    bool isSingleReference(void) const;
+    unsigned int retainCount(void) const;
     virtual bool isEqual(const CCObject* pObject);
+
+    virtual void acceptVisitor(CCDataVisitor &visitor);
 
     virtual void update(float dt) {CC_UNUSED_PARAM(dt);};
     

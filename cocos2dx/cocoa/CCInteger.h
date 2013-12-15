@@ -8,6 +8,7 @@ NS_CC_BEGIN
 /**
  * @addtogroup data_structures
  * @{
+ * @js NA
  */
 
 class CC_DLL CCInteger : public CCObject
@@ -23,6 +24,12 @@ public:
         pRet->autorelease();
         return pRet;
     }
+
+    /* override functions 
+     * @lua NA
+     */
+    virtual void acceptVisitor(CCDataVisitor &visitor) { visitor.visit(this); }
+
 private:
     int m_nValue;
 };

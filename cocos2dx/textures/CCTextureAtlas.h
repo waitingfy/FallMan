@@ -74,10 +74,19 @@ protected:
     CC_PROPERTY(ccV3F_C4B_T2F_Quad *, m_pQuads, Quads)
 
 public:
-
+    /**
+     * @js ctor
+     */
     CCTextureAtlas();
+    /**
+     *  @js NA
+     *  @lua NA
+     */
     virtual ~CCTextureAtlas();
-
+    /**
+     *  @js NA
+     *  @lua NA
+     */
     const char* description();
 
     /** creates a TextureAtlas with an filename and with an initial capacity for Quads.
@@ -202,6 +211,12 @@ public:
     /** listen the event that coming to foreground on Android
      */
     void listenBackToForeground(CCObject *obj);
+
+    /** whether or not the array buffer of the VBO needs to be updated*/
+    inline bool isDirty(void) { return m_bDirty; }
+    /** specify if the array buffer of the VBO needs to be updated */
+    inline void setDirty(bool bDirty) { m_bDirty = bDirty; }
+
 private:
     void setupIndices();
     void mapBuffers();

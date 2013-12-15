@@ -26,6 +26,9 @@ THE SOFTWARE.
 #define __MISC_NODE_CCPROGRESS_TIMER_H__
 
 #include "sprite_nodes/CCSprite.h"
+#ifdef EMSCRIPTEN
+#include "base_nodes/CCGLBufferedNode.h"
+#endif // EMSCRIPTEN
 
 NS_CC_BEGIN
 
@@ -51,9 +54,19 @@ typedef enum {
  @since v0.99.1
  */
 class CC_DLL CCProgressTimer : public CCNodeRGBA
+#ifdef EMSCRIPTEN
+, public CCGLBufferedNode
+#endif // EMSCRIPTEN
 {
 public:
+    /**
+     * @js ctor
+     */
     CCProgressTimer();
+    /**
+     * @js NA
+     * @lua NA
+     */
     ~CCProgressTimer(void);
 
     /**    Change the percentage to change progress. */
@@ -71,13 +84,18 @@ public:
     void setPercentage(float fPercentage);
     void setSprite(CCSprite *pSprite);
     void setType(CCProgressTimerType type);
+    /**
+     *  @js setReverseDirection
+     */
     void setReverseProgress(bool reverse);
 
     virtual void draw(void);
     void setAnchorPoint(CCPoint anchorPoint);
 
-    virtual void setOpacityModifyRGB(bool bValue);
-    virtual bool isOpacityModifyRGB(void);
+    virtual void setColor(const ccColor3B& color);
+    virtual const ccColor3B& getColor() const;
+    virtual GLubyte getOpacity() const;
+    virtual void setOpacity(GLubyte opacity);
     
     inline bool isReverseDirection() { return m_bReverseDirection; };
     inline void setReverseDirection(bool value) { m_bReverseDirection = value; };

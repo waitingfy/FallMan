@@ -32,6 +32,8 @@ NS_CC_BEGIN
 /**
  * @addtogroup data_structures
  * @{
+ * @js NA
+ * @lua NA
  */
 
 class CC_DLL CCDouble : public CCObject
@@ -50,6 +52,10 @@ public:
         }
         return pRet;
     }
+
+    /* override functions */
+    virtual void acceptVisitor(CCDataVisitor &visitor) { visitor.visit(this); }
+
 private:
     double m_dValue;
 };

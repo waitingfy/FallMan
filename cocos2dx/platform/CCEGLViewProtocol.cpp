@@ -150,6 +150,7 @@ void CCEGLViewProtocol::setTouchDelegate(EGLTouchDelegate * pDelegate)
 
 void CCEGLViewProtocol::setViewPortInPoints(float x , float y , float w , float h)
 {
+
     glViewport((GLint)(x * m_fScaleX + m_obViewPortRect.origin.x),
                (GLint)(y * m_fScaleY + m_obViewPortRect.origin.y),
                (GLsizei)(w * m_fScaleX),
@@ -166,7 +167,7 @@ void CCEGLViewProtocol::setScissorInPoints(float x , float y , float w , float h
 
 bool CCEGLViewProtocol::isScissorEnabled()
 {
-	return glIsEnabled(GL_SCISSOR_TEST);
+	return (GL_FALSE == glIsEnabled(GL_SCISSOR_TEST)) ? false : true;
 }
 
 CCRect CCEGLViewProtocol::getScissorRect()

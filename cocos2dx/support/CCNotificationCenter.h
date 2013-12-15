@@ -29,7 +29,9 @@ THE SOFTWARE.
 #include "cocoa/CCArray.h"
 
 NS_CC_BEGIN
-
+/**
+ * @js NA
+ */
 class CC_DLL CCNotificationCenter : public CCObject
 {
 public:
@@ -72,10 +74,10 @@ public:
      *  @note Only supports Lua Binding now.
      *  @param handler The lua handler.
      */
-    void registerScriptObserver(int handler);
+    void registerScriptObserver(CCObject *target,int handler,const char* name);
 
     /** Unregisters script observer */
-    void unregisterScriptObserver(void);
+    void unregisterScriptObserver(CCObject *target,const char* name);
     
     /** @brief Posts one notification event by name.
      *  @param name The name of this notification.
@@ -93,6 +95,12 @@ public:
      *  @return The script handle.
      */
     inline int getScriptHandler() { return m_scriptHandler; };
+    
+    /** @brief Gets observer script handler.
+     *  @param name The name of this notification.
+     *  @return The observer script handle.
+     */
+    int getObserverHandlerByName(const char* name);
 private:
     // internal functions
 
@@ -105,6 +113,10 @@ private:
     int     m_scriptHandler;
 };
 
+/**
+ * @js NA
+ * @lua NA
+ */
 class CC_DLL CCNotificationObserver : public CCObject
 {
 public:
@@ -129,6 +141,7 @@ private:
     CC_PROPERTY_READONLY(SEL_CallFuncO, m_selector, Selector);
     CC_PROPERTY_READONLY(char *, m_name, Name);
     CC_PROPERTY_READONLY(CCObject *, m_object, Object);
+    CC_PROPERTY(int, m_nHandler,Handler);
 };
 
 NS_CC_END

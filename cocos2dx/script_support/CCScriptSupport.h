@@ -50,7 +50,10 @@ enum ccScriptType {
     kScriptTypeLua,
     kScriptTypeJavascript
 };
-
+/**
+ * @js NA
+ * @lua NA
+ */
 class CCScriptHandlerEntry : public CCObject
 {
 public:
@@ -81,6 +84,8 @@ protected:
 /**
  * @addtogroup script_support
  * @{
+ * @js NA
+ * @lua NA
  */
 
 class CCSchedulerScriptHandlerEntry : public CCScriptHandlerEntry
@@ -122,7 +127,10 @@ private:
 };
 
 
-
+/**
+ * @js NA
+ * @lua NA
+ */
 class CCTouchScriptHandlerEntry : public CCScriptHandlerEntry
 {
 public:
@@ -160,6 +168,10 @@ private:
 // Don't make CCScriptEngineProtocol inherits from CCObject since setScriptEngine is invoked only once in AppDelegate.cpp,
 // It will affect the lifecycle of ScriptCore instance, the autorelease pool will be destroyed before destructing ScriptCore.
 // So a crash will appear on Win32 if you click the close button.
+/**
+ * @js NA
+ * @lua NA
+ */
 class CC_DLL CCScriptEngineProtocol
 {
 public:
@@ -173,6 +185,9 @@ public:
     
     /** Remove script function handler, only CCLuaEngine class need to implement this function. */
     virtual void removeScriptHandler(int nHandler) {};
+    
+    /** Reallocate script function handler, only CCLuaEngine class need to implement this function. */
+    virtual int reallocateScriptHandler(int nHandler) { return -1;}
     
     /**
      @brief Execute script code contained in the given string.
@@ -225,14 +240,22 @@ public:
 
     /** function for common event */
     virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL, const char* pEventSourceClassName = NULL) = 0;
-    /** function for assert test */
-    virtual bool executeAssert(bool cond, const char *msg = NULL) = 0;
+    
+    /** function for c++ call back lua funtion */
+    virtual int executeEventWithArgs(int nHandler, CCArray* pArgs) { return 0; }
+
+    /** called by CCAssert to allow scripting engine to handle failed assertions
+     * @return true if the assert was handled by the script engine, false otherwise.
+     */
+    virtual bool handleAssert(const char *msg) = 0;
 };
 
 /**
  CCScriptEngineManager is a singleton which holds an object instance of CCScriptEngineProtocl
  It helps cocos2d-x and the user code to find back LuaEngine object
  @since v0.99.5-x-0.8.5
+ @js NA
+ @lua NA
  */
 class CC_DLL CCScriptEngineManager
 {
