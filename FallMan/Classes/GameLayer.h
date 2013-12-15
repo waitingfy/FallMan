@@ -74,6 +74,7 @@ private:
 	bool _isSomeBoardHitBob;             //true means some board hit bob
 
 	bool _changeHighScore;
+	bool _alreadyPlayDieEffect;
 	void initMenus();
 	vector<int> getLevelDueToFloorNum();
 	void changeSpeedWithFloorCount();
@@ -83,6 +84,7 @@ private:
 	void checkGameOver();
 	void saveHighestScore();
 	void getNextBoardIndex(int &levelIndex,vector<int> &levelVector);
+	void playDieEffect();
 };
 
 #endif  // __HELLOWORLD_SCENE_H__

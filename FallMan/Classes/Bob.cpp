@@ -14,9 +14,9 @@ Bob::Bob(CCPoint position):_state(kBobFall){
 	_bloodCount = 12;
 
 	_onRollingBoardAction = CCSequence::create(
-		CCDelayTime::create(0.5f),
+		CCDelayTime::create(0.3f),
 		CCCallFunc::create(this,callfunc_selector(Bob::changeToCollideNothing)),
-		CCDelayTime::create(0.8f),
+		CCDelayTime::create(0.5f),
 		CCCallFunc::create(this,callfunc_selector(Bob::changeToFall)),
 		NULL
 		);
@@ -162,7 +162,6 @@ void Bob::setBloodCount(int bloodCount){
 	}
 	if(bloodCount <= 0){
 		CCLOG("bob die!!!!!!!!");
-		PlayEffect(DieEffect);
 		setState(kBobDie);
 		bloodCount = 0;
 	}

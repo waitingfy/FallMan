@@ -76,6 +76,6 @@ void AppDelegate::preloadMusic(){
 	SimpleAudioEngine::sharedEngine()->preloadEffect(SkateEffect);
 	SimpleAudioEngine::sharedEngine()->preloadEffect(SpringEffect);
 
-	SimpleAudioEngine::sharedEngine()->setBackgroundMusicVolume(0.1f);
-	SimpleAudioEngine::sharedEngine()->setEffectsVolume(0.5f);
+	SimpleAudioEngine::sharedEngine()->setBackgroundMusicVolume(0.1);
+	SimpleAudioEngine::sharedEngine()->setEffectsVolume(0.5);
 }

@@ -39,7 +39,7 @@ vector<int> _level9(level9,level9 + sizeof(level9) / sizeof(int));
 vector<int> _level10(level10,level10 + sizeof(level10) / sizeof(int));
 
 GameLayer::GameLayer():_floorPosition(0),_startPosition(250),_levelIndex(0),_gameState(kGameReady)
-,_boardSpeed(GoTopSpeed),_changeHighScore(false){
+,_boardSpeed(GoTopSpeed),_changeHighScore(false),_alreadyPlayDieEffect(false){
 
 }
 
@@ -351,10 +351,12 @@ void GameLayer::updateBobAndBoard(float dt){
 
 void GameLayer::checkGameOver(){
 	if(_bob->getBloodCount() == 0){
+		playDieEffect();
 		_bob->setState(kBobDie);
 	}
 
 	if(_bob->getPositionY() <= - (_bob->getHeight() / 2) ){
+		playDieEffect();
 		_gameState = kGameOver;	
 		saveHighestScore();// when game over, save the highest score	
 	}
@@ -362,7 +364,6 @@ void GameLayer::checkGameOver(){
 
 void GameLayer::saveHighestScore(){
 	if(_changeHighScore == false){//save highest score
-		PlayEffect(DieEffect);
 		int highScore = CCUserDefault::sharedUserDefault()->getIntegerForKey(HighScoreKey);
 		if(getFloorCount() > highScore){
 			CCUserDefault::sharedUserDefault()->setIntegerForKey(HighScoreKey,getFloorCount());
@@ -399,4 +400,11 @@ void GameLayer::resumeGame(CCObject *pSender){
 void GameLayer::backToMenuLayer(CCObject *pSender){
 	CCScene *newScene = CCTransitionMoveInL::create(0.2f,MenuLayer::scene());
 	CCDirector::sharedDirector()->replaceScene(newScene);
+}
+
+void GameLayer::playDieEffect(){
+	if(_alreadyPlayDieEffect == false){
+		PlayEffect(DieEffect);
+		_alreadyPlayDieEffect = true;
+	}
 }
