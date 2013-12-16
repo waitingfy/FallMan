@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 USING_NS_CC;
 
+
+
 class MenuLayer : public CCLayer{
 public:
 	virtual bool init();
@@ -21,6 +23,8 @@ private:
 	CCMenu *_mainMenu;
 	CCMenu *_soundOnMenu;
 	CCMenu *_soundOffMenu;
+	bool _soundEnable;
+	
 };
 
 

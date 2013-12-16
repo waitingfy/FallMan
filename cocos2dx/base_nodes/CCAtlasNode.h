@@ -75,8 +75,18 @@ protected:
     CC_PROPERTY(unsigned int, m_uQuadsToDraw, QuadsToDraw);
     // color uniform
     GLint    m_nUniformColor;
+    // This varible is only used for CCLabelAtlas FPS display. So plz don't modify its value.
+    bool m_bIgnoreContentScaleFactor;
+    
 public:
+    /**
+     *  @js ctor
+     */
     CCAtlasNode();
+    /**
+     *  @js NA
+     *  @lua NA
+     */
     virtual ~CCAtlasNode();
 
 	/** creates a CCAtlasNode  with an Atlas file the width and height of each item and the quantity of items to render*/
@@ -114,7 +124,9 @@ private :
     void calculateMaxItems();
     void updateBlendFunc();
     void updateOpacityModifyRGB();
-
+    
+    friend class CCDirector;
+    void setIgnoreContentScaleFactor(bool bIgnoreContentScaleFactor);
 };
 
 // end of base_node group

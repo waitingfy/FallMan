@@ -29,6 +29,10 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT) || (CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
+class CCFreeTypeFont;
+#endif
+
 /**
  * @addtogroup platform
  * @{
@@ -37,7 +41,14 @@ NS_CC_BEGIN
 class CC_DLL CCImage : public CCObject
 {
 public:
+    /**
+     @js ctor
+     */
     CCImage();
+    /**
+     * @js NA
+     * @lua NA
+     */
     ~CCImage();
 
     typedef enum
@@ -88,6 +99,7 @@ public:
     @param nLength  data length expressed in (number of) bytes.
     @param nWidth, nHeight, nBitsPerComponent are used for kFmtRawData.
     @return true if loaded correctly.
+    @js NA
     */
     bool initWithImageData(void * pData, 
                            int nDataLen, 
@@ -104,6 +116,7 @@ public:
     @param  eAlignMask  the test Alignment
     @param  pFontName   the name of the font used to draw the text. If nil, use the default system font.
     @param  nSize       the font size, if 0, use the system default size.
+    @js NA
     */
     bool initWithString(
         const char *    pText, 
@@ -112,12 +125,45 @@ public:
         ETextAlign      eAlignMask = kAlignCenter,
         const char *    pFontName = 0,
         int             nSize = 0);
+    
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) || (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        /**
+         * @js NA
+         * @lua NA
+         */
+        bool initWithStringShadowStroke(
+                                            const char *    pText,
+                                            int             nWidth      = 0,
+                                            int             nHeight     = 0,
+                                            ETextAlign      eAlignMask  = kAlignCenter,
+                                            const char *    pFontName   = 0,
+                                            int             nSize       = 0,
+                                            float           textTintR   = 1,
+                                            float           textTintG   = 1,
+                                            float           textTintB   = 1,
+                                            bool shadow                 = false,
+                                            float shadowOffsetX         = 0.0,
+                                            float shadowOffsetY         = 0.0,
+                                            float shadowOpacity         = 0.0,
+                                            float shadowBlur            = 0.0,
+                                            bool  stroke                =  false,
+                                            float strokeR               = 1,
+                                            float strokeG               = 1,
+                                            float strokeB               = 1,
+                                            float strokeSize            = 1
+                                        
+                                        );
+    
+    #endif
+    
 
     unsigned char *   getData()               { return m_pData; }
-    int         getDataLen()            { return m_nWidth * m_nHeight; }
+    int               getDataLen()            { return m_nWidth * m_nHeight; }
 
-    bool hasAlpha()                     { return m_bHasAlpha; }
-    bool isPremultipliedAlpha()         { return m_bPreMulti; }
+
+    bool hasAlpha()                     { return m_bHasAlpha;   }
+    bool isPremultipliedAlpha()         { return m_bPreMulti;   }
+
 
     /**
     @brief    Save CCImage data to the specified file, with specified format.
@@ -136,7 +182,7 @@ protected:
     bool _initWithTiffData(void *pData, int nDataLen);
     bool _initWithWebpData(void *pData, int nDataLen);
     // @warning kFmtRawData only support RGBA8888
-    bool _initWithRawData(void *pData, int nDatalen, int nWidth, int nHeight, int nBitsPerComponent);
+    bool _initWithRawData(void *pData, int nDatalen, int nWidth, int nHeight, int nBitsPerComponent, bool bPreMulti);
 
     bool _saveImageToPNG(const char *pszFilePath, bool bIsToRGB = true);
     bool _saveImageToJPG(const char *pszFilePath);
@@ -145,10 +191,16 @@ protected:
     bool m_bHasAlpha;
     bool m_bPreMulti;
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT) || (CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
+    CCFreeTypeFont* m_ft;
+#endif
+
 private:
     // noncopyable
     CCImage(const CCImage&    rImg);
     CCImage & operator=(const CCImage&);
+
+
 };
 
 // end of platform group

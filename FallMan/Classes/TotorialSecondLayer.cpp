@@ -1,6 +1,6 @@
 #include "TutorialFirstLayer.h"
 #include "TutorialSecondLayer.h"
-
+#include "Constants.h"
 
 CCScene* TutorialSecond::scene(){
 	CCScene * scene = NULL;
@@ -58,6 +58,7 @@ bool TutorialSecond::init()
 
 
 void TutorialSecond::backTutorial(CCObject *pSender){
+	PlayEffect(ClickEffect);
 	CCScene *newScene = CCTransitionMoveInL::create(0.2f, TutorialFirst::scene());
 	CCDirector::sharedDirector()->replaceScene(newScene);
 }

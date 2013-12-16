@@ -177,9 +177,9 @@ void CCClippingNode::visit()
         static bool once = true;
         if (once)
         {
-            char warning[200];
-            snprintf(warning, 50, "Nesting more than %d stencils is not supported. Everything will be drawn without stencil for this node and its childs.", g_sStencilBits);
-            CCLOG(warning);
+            char warning[200] = {0};
+            snprintf(warning, sizeof(warning), "Nesting more than %d stencils is not supported. Everything will be drawn without stencil for this node and its childs.", g_sStencilBits);
+            CCLOG("%s", warning);
             
             once = false;
         }
@@ -228,6 +228,7 @@ void CCClippingNode::visit()
     // this means that operation like glClear or glStencilOp will be masked with this value
     glStencilMask(mask_layer);
     
+	glClear(GL_STENCIL_BUFFER_BIT);
     // manually save the depth test state
     //GLboolean currentDepthTestEnabled = GL_TRUE;
     GLboolean currentDepthWriteMask = GL_TRUE;

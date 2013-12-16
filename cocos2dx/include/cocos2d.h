@@ -2,6 +2,7 @@
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2011      Zynga Inc.
+Copyright (c) Microsoft Open Technologies, Inc.
 
 http://www.cocos2d-x.org
 
@@ -165,6 +166,24 @@ THE SOFTWARE.
 	#include "platform/win32/CCStdC.h"
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+	#include "platform/winrt/CCApplication.h"
+	#include "platform/winrt/CCEGLView.h"
+	#include "platform/winrt/CCGL.h"
+	#include "platform/winrt/CCStdC.h"
+	#include "platform/winrt/CCAccelerometer.h"
+	#include "platform/winrt/CCPrecompiledShaders.h"
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
+	#include "platform/winrt/CCApplication.h"
+	#include "platform/wp8/CCEGLView.h"
+	#include "platform/winrt/CCGL.h"
+	#include "platform/winrt/CCStdC.h"
+	#include "platform/winrt/CCAccelerometer.h"
+	#include "platform/winrt/CCPrecompiledShaders.h"
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_WP8
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 	#include "platform/mac/CCAccelerometer.h"
 	#include "platform/mac/CCApplication.h"
@@ -172,6 +191,10 @@ THE SOFTWARE.
 	#include "platform/mac/CCGL.h"
 	#include "platform/mac/CCStdC.h"
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_MAC
+
+
+
+
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 	#include "platform/linux/CCAccelerometer.h"
@@ -198,6 +221,22 @@ THE SOFTWARE.
     #include "platform/nacl/CCGL.h"
     #include "platform/nacl/CCStdC.h"
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_EMSCRIPTEN)
+    #include "platform/emscripten/CCAccelerometer.h"
+    #include "platform/emscripten/CCApplication.h"
+    #include "platform/emscripten/CCEGLView.h"
+    #include "platform/emscripten/CCGL.h"
+    #include "platform/emscripten/CCStdC.h"
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_EMSCRIPTEN
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_TIZEN)
+    #include "platform/tizen/CCAccelerometer.h"
+    #include "platform/tizen/CCApplication.h"
+    #include "platform/tizen/CCEGLView.h"
+    #include "platform/tizen/CCGL.h"
+    #include "platform/tizen/CCStdC.h"
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_TIZEN
 
 // script_support
 #include "script_support/CCScriptSupport.h"
@@ -255,6 +294,10 @@ THE SOFTWARE.
 #include "CCConfiguration.h"
 #include "CCDirector.h"
 #include "CCScheduler.h"
+
+// component
+#include "support/component/CCComponent.h"
+#include "support/component/CCComponentContainer.h"
 
 NS_CC_BEGIN
 

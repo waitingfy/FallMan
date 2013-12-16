@@ -1,5 +1,6 @@
 /****************************************************************************
 Copyright (c) 2010 cocos2d-x.org
+Copyright (c) Microsoft Open Technologies, Inc.
 
 http://www.cocos2d-x.org
 
@@ -33,8 +34,22 @@ THE SOFTWARE.
 #include "png.h"
 #include "jpeglib.h"
 #include "tiffio.h"
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT) || (CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
+#include "CCFreeTypeFont.h"
+#endif
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#include "platform/android/CCFileUtilsAndroid.h"
+#endif
+
 #include <string>
 #include <ctype.h>
+
+#ifdef EMSCRIPTEN
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+#endif // EMSCRIPTEN
 
 NS_CC_BEGIN
 
@@ -82,17 +97,43 @@ CCImage::CCImage()
 , m_bHasAlpha(false)
 , m_bPreMulti(false)
 {
-
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT) || (CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
+    m_ft = nullptr;
+#endif
 }
 
 CCImage::~CCImage()
 {
     CC_SAFE_DELETE_ARRAY(m_pData);
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT) || (CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
+    CC_SAFE_DELETE(m_ft);
+#endif
 }
 
 bool CCImage::initWithImageFile(const char * strPath, EImageFormat eImgFmt/* = eFmtPng*/)
 {
     bool bRet = false;
+
+#ifdef EMSCRIPTEN
+    // Emscripten includes a re-implementation of SDL that uses HTML5 canvas
+    // operations underneath. Consequently, loading images via IMG_Load (an SDL
+    // API) will be a lot faster than running libpng et al as compiled with
+    // Emscripten.
+    SDL_Surface *iSurf = IMG_Load(strPath);
+
+    int size = 4 * (iSurf->w * iSurf->h);
+    bRet = _initWithRawData((void*)iSurf->pixels, size, iSurf->w, iSurf->h, 8, true);
+
+    unsigned int *tmp = (unsigned int *)m_pData;
+    int nrPixels = iSurf->w * iSurf->h;
+    for(int i = 0; i < nrPixels; i++)
+    {
+        unsigned char *p = m_pData + i * 4;
+        tmp[i] = CC_RGB_PREMULTIPLY_ALPHA( p[0], p[1], p[2], p[3] );
+    }
+
+    SDL_FreeSurface(iSurf);
+#else
     unsigned long nSize = 0;
     std::string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(strPath);
     unsigned char* pBuffer = CCFileUtils::sharedFileUtils()->getFileData(fullPath.c_str(), "rb", &nSize);
@@ -101,6 +142,8 @@ bool CCImage::initWithImageFile(const char * strPath, EImageFormat eImgFmt/* = e
         bRet = initWithImageData(pBuffer, nSize, eImgFmt);
     }
     CC_SAFE_DELETE_ARRAY(pBuffer);
+#endif // EMSCRIPTEN
+
     return bRet;
 }
 
@@ -108,7 +151,12 @@ bool CCImage::initWithImageFileThreadSafe(const char *fullpath, EImageFormat ima
 {
     bool bRet = false;
     unsigned long nSize = 0;
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    CCFileUtilsAndroid *fileUitls = (CCFileUtilsAndroid*)CCFileUtils::sharedFileUtils();
+    unsigned char *pBuffer = fileUitls->getFileDataForAsync(fullpath, "rb", &nSize);
+#else
     unsigned char *pBuffer = CCFileUtils::sharedFileUtils()->getFileData(fullpath, "rb", &nSize);
+#endif
     if (pBuffer != NULL && nSize > 0)
     {
         bRet = initWithImageData(pBuffer, nSize, imageType);
@@ -144,14 +192,16 @@ bool CCImage::initWithImageData(void * pData,
             bRet = _initWithTiffData(pData, nDataLen);
             break;
         }
-        else if (kFmtWebp == eFmt)
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT) && (CC_TARGET_PLATFORM != CC_PLATFORM_WP8)
+       else if (kFmtWebp == eFmt)
         {
             bRet = _initWithWebpData(pData, nDataLen);
             break;
         }
+#endif
         else if (kFmtRawData == eFmt)
         {
-            bRet = _initWithRawData(pData, nDataLen, nWidth, nHeight, nBitsPerComponent);
+            bRet = _initWithRawData(pData, nDataLen, nWidth, nHeight, nBitsPerComponent, false);
             break;
         }
         else
@@ -288,7 +338,12 @@ bool CCImage::_initWithJpgData(void * data, int nSize)
         jpeg_mem_src( &cinfo, (unsigned char *) data, nSize );
 
         /* reading the image header which contains image information */
+#if (JPEG_LIB_VERSION >= 90)
+        // libjpeg 0.9 adds stricter types.
+        jpeg_read_header( &cinfo, TRUE );
+#else
         jpeg_read_header( &cinfo, true );
+#endif
 
         // we only support RGB or grayscale
         if (cinfo.jpeg_color_space != JCS_RGB)
@@ -647,7 +702,7 @@ bool CCImage::_initWithTiffData(void* pData, int nDataLen)
     return bRet;
 }
 
-bool CCImage::_initWithRawData(void * pData, int nDatalen, int nWidth, int nHeight, int nBitsPerComponent)
+bool CCImage::_initWithRawData(void * pData, int nDatalen, int nWidth, int nHeight, int nBitsPerComponent, bool bPreMulti)
 {
     bool bRet = false;
     do 
@@ -658,6 +713,7 @@ bool CCImage::_initWithRawData(void * pData, int nDatalen, int nWidth, int nHeig
         m_nHeight   = (short)nHeight;
         m_nWidth    = (short)nWidth;
         m_bHasAlpha = true;
+        m_bPreMulti = bPreMulti;
 
         // only RGBA8888 supported
         int nBytesPerComponent = 4;
@@ -668,6 +724,7 @@ bool CCImage::_initWithRawData(void * pData, int nDatalen, int nWidth, int nHeig
 
         bRet = true;
     } while (0);
+
     return bRet;
 }
 

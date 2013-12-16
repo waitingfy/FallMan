@@ -1,7 +1,10 @@
 #include "TutorialFirstLayer.h"
 #include "TutorialSecondLayer.h"
 #include "MenuLayer.h"
+#include "SimpleAudioEngine.h"
+#include "Constants.h"
 
+using namespace CocosDenshion;
 
 CCScene* TutorialFirst::scene(){
 	CCScene * scene = NULL;
@@ -66,11 +69,13 @@ bool TutorialFirst::init()
 }
 
 void TutorialFirst::backToMenuLayer(CCObject *pSender){
+	PlayEffect(ClickEffect);
 	CCScene *newScene = CCTransitionMoveInL::create(0.2f, MenuLayer::scene());
 	CCDirector::sharedDirector()->replaceScene(newScene);
 }
 
 void TutorialFirst::nextTutorial(CCObject *pSender){
+	PlayEffect(ClickEffect);
 	CCScene *newScene = CCTransitionMoveInR::create(0.2f, TutorialSecond::scene());
 	CCDirector::sharedDirector()->replaceScene(newScene);
 }

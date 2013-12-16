@@ -108,15 +108,22 @@ while(false)
 
 
 NS_CC_BEGIN
-
+/**
+ * @js NA
+ */
 class CC_DLL CCArray : public CCObject
 {
 public:
+    /**
+     * @lua NA
+     */
     ~CCArray();
 
     /** Create an array */
     static CCArray* create();
-    /** Create an array with some objects */
+    /** Create an array with some objects 
+     *  @lua NA
+     */
     static CCArray* create(CCObject* pObject, ...);
     /** Create an array with one object */
     static CCArray* createWithObject(CCObject* pObject);
@@ -134,28 +141,39 @@ public:
     /*
      @brief The same meaning as arrayWithContentsOfFile(), but it doesn't call autorelease, so the
      invoker should call release().
+     @lua NA
      */
     static CCArray* createWithContentsOfFileThreadSafe(const char* pFileName);
 
-    /** Initializes an array */
+    /** Initializes an array 
+     *  @lua NA
+     */
     bool init();
-    /** Initializes an array with one object */
+    /** Initializes an array with one object
+     *  @lua NA
+     */
     bool initWithObject(CCObject* pObject);
-    /** Initializes an array with some objects */
+    /** Initializes an array with some objects 
+     *  @lua NA
+     */
     bool initWithObjects(CCObject* pObject, ...);
-    /** Initializes an array with capacity */
+    /** Initializes an array with capacity 
+     *  @lua NA
+     */
     bool initWithCapacity(unsigned int capacity);
-    /** Initializes an array with an existing array */
+    /** Initializes an array with an existing array 
+     *  @lua NA
+     */
     bool initWithArray(CCArray* otherArray);
 
     // Querying an Array
 
     /** Returns element count of the array */
-    unsigned int count();
+    unsigned int count() const;
     /** Returns capacity of the array */
-    unsigned int capacity();
+    unsigned int capacity() const;
     /** Returns index of a certain object, return UINT_MAX if doesn't contain the object */
-    unsigned int indexOfObject(CCObject* object);
+    unsigned int indexOfObject(CCObject* object) const;
     /** Returns an element with a certain index */
     CCObject* objectAtIndex(unsigned int index);
     /** Returns last element */
@@ -163,7 +181,7 @@ public:
     /** Returns a random element */
     CCObject* randomObject();
     /** Returns a Boolean value that indicates whether object is present in array. */
-    bool containsObject(CCObject* object);
+    bool containsObject(CCObject* object) const;
     /** @since 1.1 */
     bool isEqualToArray(CCArray* pOtherArray);
     // Adding Objects
@@ -207,12 +225,24 @@ public:
     /* Shrinks the array so the memory footprint corresponds with the number of items */
     void reduceMemoryFootprint();
   
-    /* override functions */
+    /** override functions 
+     *  @js NA
+     *  @lua NA
+     */
     virtual CCObject* copyWithZone(CCZone* pZone);
+
+    /* override functions */
+    virtual void acceptVisitor(CCDataVisitor &visitor);
 
 public:
     ccArray* data;
+    /**
+     *  @lua NA
+     */
     CCArray();
+    /**
+     *  @lua NA
+     */
     CCArray(unsigned int capacity);
 };
 
