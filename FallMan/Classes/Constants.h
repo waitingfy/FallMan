@@ -8,5 +8,5 @@ const int SmallestCountBoard = 10;            //when we reach this count, we wil
 const int BoardWillDisppearHigherThisNumber = 440;
 const float GoTopSpeed = 0.9f;
 const int PerBoardHeight = 80;
-
+const char BackGroundMusic[] = "background.mp3";
 #endif
